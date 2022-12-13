@@ -3,6 +3,9 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.runBlocking
+import kotlin.concurrent.thread
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /*fun main(args: Array<String>) {
     println("Hello, World!")
@@ -23,4 +26,33 @@ fun main() = runBlocking{
         println(it)
     }
 
+}
+
+interface SingleMethodCallback {
+    fun onCallBack(value: String)
+}
+
+private fun runTask(callback: SingleMethodCallback) {
+    thread  {
+        Thread.sleep(1000)
+        callback.onCallBack("result")
+    }
+}
+
+private fun runTaskDefault() {
+    runTask(object : SingleMethodCallback {
+        override fun onCallBack(value: String) {
+        }
+    })
+}
+
+suspend fun runTaskWithSuspend(): String {
+    // suspendCoroutine是一个挂起函数
+    return suspendCoroutine { continuation ->
+        runTask(object : SingleMethodCallback {
+            override fun onCallBack(value: String) {
+                continuation.resume(value)
+            }
+        })
+    }
 }
