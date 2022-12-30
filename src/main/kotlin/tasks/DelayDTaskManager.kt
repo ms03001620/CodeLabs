@@ -30,7 +30,11 @@ class DelayDTaskManager<T> {
                         depends.add(task.execute(depends))
                     }
                 }
+                if (jobsList.isNotEmpty()) {
+                    depends.addAll(runAsyncTasks(jobsList))
+                }
             }
+            assert(jobsList.isEmpty())
             val report = Report<T>(pass, depends)
             callback.invoke(report)
         }

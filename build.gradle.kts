@@ -28,6 +28,8 @@ dependencies {
     implementation("io.netty:netty:3.10.6.Final")
     implementation("io.netty:netty-all:4.1.85.Final")
     implementation("com.google.protobuf:protobuf-java:2.6.1")
+
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
 }
 
 tasks.getByName<Test>("test") {

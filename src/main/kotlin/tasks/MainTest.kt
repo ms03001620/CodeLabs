@@ -49,7 +49,6 @@ fun main(args: Array<String>) = runBlocking {
     val m = DelayDTaskManager<String>()
     m.add(t1)
     m.add(t2)
-    m.add(t3)
     m.run(this) {
         println(it)
     }
