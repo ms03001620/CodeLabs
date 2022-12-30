@@ -20,19 +20,19 @@ class DelayDTaskManagerTest {
     fun test2Async1Sync() = runTest(testDispatcher) {
         val m = DelayDTaskManager<String>()
         m.add(DependsTask(RunType.ASYNC, object : OnDependsCall<String> {
-            override suspend fun onCall(depends: ArrayList<String>?): String {
+            override suspend fun onCall(depends: ArrayList<String>): String {
                 delay(1000)
                 return "asyncTask1"
             }
         }))
         m.add(DependsTask(RunType.ASYNC, object : OnDependsCall<String> {
-            override suspend fun onCall(depends: ArrayList<String>?): String {
+            override suspend fun onCall(depends: ArrayList<String>): String {
                 delay(1000)
                 return "asyncTask2"
             }
         }))
         m.add(DependsTask(RunType.SYNC, object : OnDependsCall<String> {
-            override suspend fun onCall(depends: ArrayList<String>?): String {
+            override suspend fun onCall(depends: ArrayList<String>): String {
                 delay(1000)
                 var count = 0
                 depends?.forEach {
@@ -53,13 +53,13 @@ class DelayDTaskManagerTest {
     fun test2Async() = runTest(testDispatcher) {
         val m = DelayDTaskManager<String>()
         m.add(DependsTask(RunType.ASYNC, object : OnDependsCall<String> {
-            override suspend fun onCall(depends: ArrayList<String>?): String {
+            override suspend fun onCall(depends: ArrayList<String>): String {
                 delay(1000)
                 return "asyncTask1"
             }
         }))
         m.add(DependsTask(RunType.ASYNC, object : OnDependsCall<String> {
-            override suspend fun onCall(depends: ArrayList<String>?): String {
+            override suspend fun onCall(depends: ArrayList<String>): String {
                 delay(1000)
                 return "asyncTask2"
             }
@@ -75,13 +75,13 @@ class DelayDTaskManagerTest {
     fun test2sync() = runTest(testDispatcher) {
         val m = DelayDTaskManager<String>()
         m.add(DependsTask(RunType.SYNC, object : OnDependsCall<String> {
-            override suspend fun onCall(depends: ArrayList<String>?): String {
+            override suspend fun onCall(depends: ArrayList<String>): String {
                 delay(1000)
                 return "asyncTask1"
             }
         }))
         m.add(DependsTask(RunType.SYNC, object : OnDependsCall<String> {
-            override suspend fun onCall(depends: ArrayList<String>?): String {
+            override suspend fun onCall(depends: ArrayList<String>): String {
                 delay(1000)
                 return "asyncTask2"
             }
@@ -90,6 +90,28 @@ class DelayDTaskManagerTest {
         println(report)
         assertTrue(report.depends[0].length == 10)
         assertTrue(report.depends[1].length == 10)
+        assertEquals(2000, currentTime)// 2(sync) = 2000
+    }
+
+    @Test
+    fun test1sync1Async() = runTest(testDispatcher) {
+        val m = DelayDTaskManager<String>()
+        m.add(DependsTask(RunType.SYNC, object : OnDependsCall<String> {
+            override suspend fun onCall(depends: ArrayList<String>): String {
+                delay(1000)
+                return "asyncTask1"
+            }
+        }))
+        m.add(DependsTask(RunType.ASYNC, object : OnDependsCall<String> {
+            override suspend fun onCall(depends: ArrayList<String>): String {
+                delay(1000)
+                return "asyncTask2"+depends[0]
+            }
+        }))
+        val report = m.run(this)
+        println(report)
+        assertTrue(report.depends[0].length == 10)
+        assertTrue(report.depends[1].length == 20)
         assertEquals(2000, currentTime)// 2(sync) = 2000
     }
 

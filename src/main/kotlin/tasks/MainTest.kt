@@ -28,20 +28,20 @@ object MainTest {
 }
 
 fun main(args: Array<String>) = runBlocking {
-    val t1 = DependsTask(RunType.ASYNC, object : OnDependsCall<String> {
-        override suspend fun onCall(depends: ArrayList<String>?): String {
+    val t1 = DependsTask(RunType.SYNC, object : OnDependsCall<String> {
+        override suspend fun onCall(depends: ArrayList<String>): String {
             return MainTest.asyncTask1()
         }
     })
 
-    val t2 = DependsTask(RunType.ASYNC, object : OnDependsCall<String> {
-        override suspend fun onCall(depends: ArrayList<String>?): String {
+    val t2 = DependsTask(RunType.SYNC, object : OnDependsCall<String> {
+        override suspend fun onCall(depends: ArrayList<String>): String {
             return MainTest.asyncTask2()
         }
     })
 
     val t3 = DependsTask(RunType.SYNC, object : OnDependsCall<String> {
-        override suspend fun onCall(depends: ArrayList<String>?): String {
+        override suspend fun onCall(depends: ArrayList<String>): String {
             return MainTest.asyncTask3(depends).toString()
         }
     })
@@ -49,6 +49,7 @@ fun main(args: Array<String>) = runBlocking {
     val m = DelayDTaskManager<String>()
     m.add(t1)
     m.add(t2)
+    m.add(t3)
     m.run(this) {
         println(it)
     }

@@ -24,7 +24,7 @@ class DelayDTaskManager<T> {
                 list.forEach { task ->
                     if (task.type() == RunType.ASYNC) {
                         val p = async {
-                            task.execute(null)
+                            task.execute(depends)
                         }
                         jobsList.add(p)
                     } else {
