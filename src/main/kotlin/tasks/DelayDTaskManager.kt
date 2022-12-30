@@ -3,6 +3,8 @@ package tasks
 import kotlinx.coroutines.*
 import kotlin.system.measureTimeMillis
 
+data class Report<T>(val totalMs: Long, val depends: ArrayList<T>)
+
 class DelayDTaskManager<T> {
 
     private val list = ArrayList<RunTask<T>>()
@@ -11,7 +13,7 @@ class DelayDTaskManager<T> {
         list.add(task)
     }
 
-    suspend fun run(coroutineScope: CoroutineScope, callback: (ArrayList<T>) -> Unit) {
+    suspend fun run(coroutineScope: CoroutineScope, callback: (Report<T>) -> Unit) {
         coroutineScope.launch {
             val jobsList = ArrayList<Deferred<T>>()
             val depends = ArrayList<T>()
@@ -29,8 +31,8 @@ class DelayDTaskManager<T> {
                     }
                 }
             }
-            println(pass)
-            callback.invoke(depends)
+            val report = Report<T>(pass, depends)
+            callback.invoke(report)
         }
     }
 
