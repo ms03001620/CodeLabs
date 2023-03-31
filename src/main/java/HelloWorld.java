@@ -28,6 +28,9 @@ public class HelloWorld {
         t = in.nextLine();
         System.out.println(stringsXOR(s, t));
 
+
+        System.out.println(10_000 == 10*1000);
+
     }
 
 }

@@ -10,7 +10,7 @@ class ChannelTest {
 
 
 
-fun main() = runBlocking {
+fun main1() = runBlocking {
     val numbers = produceNumbers() // produces integers from 1 and on
     val squares = square(numbers) // squares integers
     repeat(5) {
