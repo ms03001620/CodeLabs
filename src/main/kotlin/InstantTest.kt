@@ -1,24 +1,27 @@
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.ZoneId
-import java.time.ZoneOffset
-import java.time.temporal.ChronoField
-import java.time.temporal.TemporalField
-import java.util.Calendar
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.runBlocking
 
-object InstantTest {
-    @JvmStatic
-    fun main(args: Array<String>) {
-        val ns = System.currentTimeMillis()
-        val now = Instant.ofEpochMilli(ns).atZone(ZoneId.systemDefault())
-        println(now)
+class InstantTest {
 
-        println("ms:"+ns)
-        println("em:"+now.toInstant().toEpochMilli())
-        println("es:"+now.toEpochSecond())
+}
 
-        println(LocalDate.now().atStartOfDay(ZoneId.systemDefault()))
+fun main() = runBlocking {
+/*    flowOf (1,2,3,4,5).onStart {
+        println("onStart")
+    }.onEmpty {
+        println("empty")
+    }.onEach {
+        print(".")
+        if (it == 3) {
+            throw IllegalAccessException("error:$it")
+        }
 
-    }
+    }.catch {
+        println("catch: $it")
+    }.onCompletion {
+        println("onCompletion :$it")
+    }.collect()*/
+
+    println("0.01".toFloat())
 }
