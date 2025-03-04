@@ -6,7 +6,7 @@ import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 
 fun isEventHappening(probability: Float): Boolean {
-    require(probability in 0.0..1.0) { "Probability must be between 0 and 1" }
+    require(probability in 0.0f..1.0f) { "Probability must be between 0 and 1" }
     return Random.nextFloat() < probability
 }
 
