@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id("java")
     kotlin("jvm") version "1.7.10"
@@ -8,6 +10,7 @@ group = "org.example"
 version = "1.0-SNAPSHOT"
 
 repositories {
+    jcenter()
     mavenCentral()
 }
 
@@ -31,9 +34,18 @@ dependencies {
     implementation("com.google.protobuf:protobuf-java:2.6.1")
 
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    implementation(kotlin("stdlib-jdk8"))
 
 }
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+}
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    jvmTarget = "17"
+}
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "17"
 }
