@@ -3,21 +3,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import java.util.concurrent.atomic.AtomicInteger
 
 data class Data(val value: Int)
 
 object Api {
     private var data = Data(0)
-    private val updateCount = AtomicInteger(0)
 
     // Simulate data submission
     suspend fun submitData(newValue: Int) {
-        println("API: Submitting data: $newValue")
-        updateCount.incrementAndGet()
-        // Simulate a successful submission immediately
-        println("API: Data submitted successfully")
-        // Simulate data update delay (5 seconds)
         delay(5000)
         data = Data(newValue)
         println("API: Data updated to: $newValue")
@@ -28,10 +23,6 @@ object Api {
         delay(500) // Simulate network latency
         return data
     }
-
-    fun getUpdateCount(): Int {
-        return updateCount.get()
-    }
 }
 
 fun main() = runBlocking {
@@ -39,23 +30,26 @@ fun main() = runBlocking {
         Api.submitData(20)
     }
 
-    // Start collecting data after submission
     checkDataUpdated(20)
         .distinctUntilChanged()
+        .catch {
+            println("Error: $it")
+        }
         .collect {
-        println(it)
-    }
-
+            println(it)
+        }
 }
 
- fun checkDataUpdated(currentUpdateCount: Int)= flow {
-        while (true) {
-            val api = Api.fetchData().value
-            emit(api)
-            delay(500) // Fetch data every 1 second
-
-            if(currentUpdateCount == api){
+fun checkDataUpdated(currentUpdateCount: Int) = flow {
+    withTimeout(10 * 1000) {
+        for(i in 1..100){
+            delay(500L * i)
+            val value = Api.fetchData().value
+            println("checkDataUpdated: $value")
+            if (currentUpdateCount == value) {
+                emit(value)
                 break
             }
         }
     }
+}
