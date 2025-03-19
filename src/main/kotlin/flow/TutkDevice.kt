@@ -1,5 +1,6 @@
 package flow
 
+import kotlin.random.Random
 
 
 class TutkDevice(uid: String, name: String, password: String) {
@@ -20,10 +21,23 @@ class TutkDevice(uid: String, name: String, password: String) {
 
     fun connectDevice() {
         Thread{
-            Thread.sleep(3000)
+            Thread.sleep(1000L /**Random.nextInt(5)*/)
             connect = true
             connectSuccessCallback?.onDeviceConnect(true)
         }.start()
+
+
+        Thread{
+            Thread.sleep(3*1000)
+            connect = false
+            connectSuccessCallback?.onDeviceConnect(false)
+        }.start()
+
+/*        Thread{
+            Thread.sleep(10*1000)
+            connect = true
+            connectSuccessCallback?.onDeviceConnect(true)
+        }.start()*/
     }
 
     fun removeConnectSuccessListener() {
